@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= htmlWebpackPlugin.options.DOMElements.title %></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <noscript>
+            Please enable Javascript to use VNC Client.
+        </noscript>
+        <div id="login-wrapper">
+            <div class="row">
+                <div class="container">
+                    <form id="login_form" method="POST" action="#">
+                        <div class="form-group">
+                            <label for="vnc_host">Host:</label>
+                            <input id="vnc_host" class="form-control" type="text" placeholder="example: 0.0.0.0" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="vnc_port">Port: *</label>
+                            <input id="vnc_port"class="form-control" type="text" placeholder="example: 5900" />
+                            <small id="vnc_password_help" class="form-text text-muted"> * Leave blank if not required</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="vnc_password">Password: *</label>
+                            <input id="vnc_password"class="form-control" type="text" placeholder="•••••••••" />
+                            <small id="vnc_password_help" class="form-text text-muted"> * Leave blank if not required</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Connect</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
