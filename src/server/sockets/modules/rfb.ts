@@ -5,12 +5,26 @@ export const createRfbClient = (
     credentials: IRfbCredentials,
     callback: Function
 ): void => {
-    const rfbClient: rfb2.RfbClient = rfb2.createConnection(credentials);
+    credentials.port = credentials.port || 5900;
+    credentials.password = credentials.password || void 0;
 
-    // prettier-ignore
-    rfbClient.on('error', err => {
-        callback(err);
-    }).on('connect', () => {
-        callback(null, rfbClient);
+    const rfbClient: rfb2.RfbClient = rfb2.createConnection({
+        ...credentials,
+        encodings: [rfb2.encodings.raw]
+    });
+
+    let hasTimedOut = false;
+
+    const connectionTimeout = setTimeout(() => {
+        rfbClient.end();
+        hasTimedOut = true;
+        callback(new Error('Connection timeout'));
+    }, 10000); // 10 seconds
+
+    rfbClient.on('connect', () => {
+        if (hasTimedOut === false) {
+            clearTimeout(connectionTimeout);
+            callback(null, rfbClient);
+        } else rfbClient.end();
     });
 };

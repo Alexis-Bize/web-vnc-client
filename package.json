@@ -1,6 +1,6 @@
 {
     "name": "vnc-client",
-    "description": "VNC Client",
+    "description": "VNC Client for your Browser",
     "version": "0.1.0",
     "license": "GNU GPLv3",
     "author": {
@@ -13,8 +13,8 @@
     },
     "scripts": {
         "start": "source env/common.env; node ./dist/server/server.js",
-        "build": "source env/common.env; webpack",
-        "serve": "npm run build:client && npm start"
+        "build": "rm -rf ./dist; source env/common.env; webpack",
+        "serve": "npm run build && npm start"
     },
     "dependencies": {
         "app-root-path": "^2.1.0",
@@ -22,8 +22,7 @@
         "pngjs": "^3.3.3",
         "rfb2": "^0.2.0",
         "socket.io": "^2.2.0",
-        "socket.io-client": "^2.2.0",
-        "uuid": "^3.3.2"
+        "socket.io-client": "^2.2.0"
     },
     "devDependencies": {
         "@types/app-root-path": "^1.2.4",
@@ -32,7 +31,6 @@
         "@types/pngjs": "^3.3.2",
         "@types/socket.io": "^2.1.2",
         "@types/socket.io-client": "^1.4.32",
-        "@types/uuid": "^3.4.4",
         "bootstrap": "^4.2.1",
         "css-loader": "^2.1.0",
         "html-webpack-plugin": "^3.2.0",

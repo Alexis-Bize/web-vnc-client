@@ -1,5 +1,11 @@
+import { ClientId } from '../sockets';
+
 export interface IEventsConstants {
     [key: string]: string;
+}
+
+export interface IWelcomeMessage {
+    id: ClientId;
 }
 
 export interface IRfbCredentials {
@@ -15,5 +21,14 @@ export interface IMouseMove {
 }
 
 export interface IKeyboardPress {
-    keyId: number;
+    keyCode: number;
+    isDown: boolean;
+}
+
+export interface IVncFrameMetadata {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    rect: any;
 }

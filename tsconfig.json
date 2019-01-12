@@ -1,14 +1,14 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es2015",
-        "allowSyntheticDefaultImports": true,
+        "target": "es5",
         "noImplicitAny": true,
         "removeComments": true,
+        "allowSyntheticDefaultImports": false,
         "alwaysStrict": true,
         "outDir": "./dist",
         "declaration": true,
-        "sourceMap": false
+        "sourceMap": true,
     },
     "include": [
         "./src/**/*"

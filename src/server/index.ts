@@ -1,9 +1,9 @@
 import * as express from 'express';
 import { resolve, join } from 'path';
 import { path as rootPath } from 'app-root-path';
-import socket from './sockets';
+import { createSocketServer } from './sockets';
 
-console.info(`[VNC CLIENT] Starting...`);
+console.info('[VNC CLIENT] Starting server...');
 
 const host = process.env.APP_HOST;
 const port = Number(process.env.APP_PORT);
@@ -15,7 +15,7 @@ app.get('/', (_, res) => {
 });
 
 const server = app.listen(port, host, () => {
-    socket(server);
-    console.info(`[VNC CLIENT] Started with success!`);
+    createSocketServer(server);
+    console.info('[VNC CLIENT] Started with success!');
     console.info(` * Listening at http://${host}:${port}`);
 });
