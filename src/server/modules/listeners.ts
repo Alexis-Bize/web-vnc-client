@@ -1,4 +1,4 @@
-import * as Jimp from 'jimp';
+import * as pngjs from 'pngjs';
 import { Socket } from 'socket.io';
 import { RfbClient } from 'rfb2';
 
@@ -24,7 +24,7 @@ export const addListeners = (
         const requestInterval: NodeJS.Timeout = setInterval(() => {
             const { width, height } = clientInfo;
             rfbClient.requestUpdate(true, 0, 0, width, height);
-        }, 10);
+        }, 4);
 
         socket.on(EVENTS_DISPATCH.MOUSE_MOVE, (payload: IMouseMove) => {
             const { clientX, clientY, buttons } = payload;
@@ -48,37 +48,20 @@ export const addListeners = (
 
         rfbClient.on('rect', (rect: any) => {
             const { x, y, width, height, data } = rect;
-            new Jimp(
-                { data, width, height },
-                (jimpErr: Error = null, image: Jimp) => {
-                    if (jimpErr !== null) {
-                        socket.emit(EVENTS_MESSAGES.VNC_CLIENT_ERROR, {
-                            error: jimpErr.message
-                        });
-                        return;
-                    }
+            const payload = { x, y, width, height } as IVncFrameMetadata;
 
-                    image.getBase64(
-                        Jimp.MIME_PNG,
-                        (b64Err: Error = null, b64img: string) => {
-                            if (b64Err !== null) {
-                                socket.emit(EVENTS_MESSAGES.VNC_CLIENT_ERROR, {
-                                    error: b64Err.message
-                                });
-                                return;
-                            }
+            const png = new pngjs.PNG({ width, height });
+            png.data = data;
 
-                            socket.emit(EVENTS_DISPATCH.VNC_FRAME, {
-                                x,
-                                y,
-                                width,
-                                height,
-                                b64img
-                            } as IVncFrameMetadata);
-                        }
-                    );
-                }
-            );
+            const buffer = pngjs.PNG.sync.write(png, {
+                colorType: 0
+            });
+
+            payload.b64img = `data:image/png;base64${Buffer.from(
+                buffer
+            ).toString('base64')}`;
+
+            socket.emit(EVENTS_DISPATCH.VNC_FRAME, payload);
         });
 
         rfbClient.on('error', (err: Error) => {

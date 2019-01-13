@@ -1,3 +1,7 @@
 #form-wrapper {
     display: block;
 }
+
+#screen-wrapper {
+    cursor: none;
+}

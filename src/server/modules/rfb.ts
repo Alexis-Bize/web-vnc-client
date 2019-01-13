@@ -10,11 +10,7 @@ export const startRfbClient = (
 
     const rfbClient: rfb2.RfbClient = rfb2.createConnection({
         ...credentials,
-        encodings: [
-            rfb2.encodings.raw,
-            rfb2.encodings.copyRect,
-            rfb2.encodings.pseudoDesktopSize
-        ]
+        encodings: [rfb2.encodings.raw]
     });
 
     let hasTimedOut = false;
@@ -25,6 +21,7 @@ export const startRfbClient = (
         callback(new Error('Connection timeout'));
     }, 10000); // 10 seconds
 
+    rfbClient.on('error', () => {});
     rfbClient.on('connect', () => {
         if (hasTimedOut === false) {
             clearTimeout(connectionTimeout);

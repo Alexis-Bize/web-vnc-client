@@ -1,4 +1,4 @@
-import { render, destroy, draw } from './screen';
+import { render, draw } from './screen';
 import { IListeners } from '../typings/listeners';
 
 import {
@@ -15,12 +15,6 @@ import {
 } from '../../common/typings/events';
 
 const _listeners: IListeners = {};
-
-export const removeAllListeners = () => {
-    document.removeEventListener('mousemove', _listeners.mouseMoveListener);
-    document.removeEventListener('keydown', _listeners.keyDownListener);
-    document.removeEventListener('keyup', _listeners.keyUpListener);
-};
 
 export const addListeners = (socket: SocketIOClient.Socket) => {
     document
@@ -46,7 +40,7 @@ export const addListeners = (socket: SocketIOClient.Socket) => {
         _listeners.mouseMoveListener = (event: MouseEvent) => {
             socket.emit(EVENTS_DISPATCH.MOUSE_MOVE, {
                 clientX: event.clientX,
-                clientY: event.clientY,
+                clientY: event.screenY,
                 buttons: event.buttons
             } as IMouseMove);
         };
@@ -65,12 +59,29 @@ export const addListeners = (socket: SocketIOClient.Socket) => {
             } as IKeyboardPress);
         };
 
-        document.addEventListener('mousemove', _listeners.mouseMoveListener);
-        document.addEventListener('keydown', _listeners.keyDownListener);
-        document.addEventListener('keyup', _listeners.keyUpListener);
+        screen.addEventListener('mousemove', _listeners.mouseMoveListener);
+        screen.addEventListener('keydown', _listeners.keyDownListener);
+        screen.addEventListener('keyup', _listeners.keyUpListener);
 
         socket.on(EVENTS_DISPATCH.VNC_FRAME, (payload: IVncFrameMetadata) => {
             draw(context, payload);
+        });
+
+        socket.on(EVENTS_MESSAGES.VNC_CLIENT_ERROR, (payload: any) => {
+            alert(payload.error);
+
+            screen.removeEventListener('keydown', _listeners.keyDownListener);
+            screen.removeEventListener('keyup', _listeners.keyUpListener);
+            screen.removeEventListener(
+                'mousemove',
+                _listeners.mouseMoveListener
+            );
+
+            document.body.removeChild(screen);
+            const form = document.getElementById('form-wrapper');
+            form.style.display = 'block';
+
+            socket.emit(EVENTS_ACTIONS.VNC_DISCONNECT);
         });
 
         socket.emit(EVENTS_DISPATCH.CLIENT_READY);
@@ -78,12 +89,5 @@ export const addListeners = (socket: SocketIOClient.Socket) => {
 
     socket.on(EVENTS_MESSAGES.VNC_CONNECTION_FAILED, (payload: any) => {
         alert(payload.error);
-    });
-
-    socket.on(EVENTS_MESSAGES.VNC_CLIENT_ERROR, (payload: any) => {
-        alert(payload.error);
-        removeAllListeners();
-        destroy();
-        socket.emit(EVENTS_ACTIONS.VNC_DISCONNECT);
     });
 };

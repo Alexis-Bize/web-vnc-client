@@ -14,14 +14,6 @@ export const render = (payload?: any): HTMLCanvasElement => {
     return canvas;
 };
 
-export const destroy = () => {
-    const canvas = document.getElementById('screen-wrapper');
-    document.body.removeChild(canvas);
-
-    const form = document.getElementById('form-wrapper');
-    form.style.display = 'block';
-};
-
 export const draw = (
     context: CanvasRenderingContext2D,
     payload: IVncFrameMetadata
