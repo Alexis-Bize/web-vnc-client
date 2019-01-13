@@ -11,7 +11,7 @@ export const EVENTS_DISPATCH: IEventsConstants = {
     MOUSE_MOVE: 'dispatch:mouse:move',
     KEYBOARD_ACTION: 'dispatch:keyboard:action',
     CLIENT_READY: 'dispatch:client:ready',
-    VNC_FRAME_RECEIVED: 'dispatch:vnc:frame-received'
+    VNC_FRAME: 'dispatch:vnc:frame'
 };
 
 export const EVENTS_ACTIONS: IEventsConstants = {

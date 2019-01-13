@@ -1,7 +1,7 @@
 import * as express from 'express';
 import { resolve, join } from 'path';
 import { path as rootPath } from 'app-root-path';
-import { createSocketServer } from './sockets';
+import { createSocketServer } from './modules/socket';
 
 console.info('[VNC CLIENT] Starting server...');
 

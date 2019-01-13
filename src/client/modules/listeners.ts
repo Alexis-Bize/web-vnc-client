@@ -1,3 +1,4 @@
+import { render, destroy, draw } from './screen';
 import { IListeners } from '../typings/listeners';
 
 import {
@@ -23,7 +24,7 @@ export const removeAllListeners = () => {
 
 export const addListeners = (socket: SocketIOClient.Socket) => {
     document
-        .getElementById('login-wrapper')
+        .getElementById('form-wrapper')
         .addEventListener('submit', event => {
             event && event.preventDefault();
 
@@ -39,7 +40,8 @@ export const addListeners = (socket: SocketIOClient.Socket) => {
         });
 
     socket.on(EVENTS_MESSAGES.VNC_CONNECTION_SUCCESS, (payload: any) => {
-        document.title = payload.title;
+        const screen = render(payload);
+        const context = screen.getContext('2d');
 
         _listeners.mouseMoveListener = (event: MouseEvent) => {
             socket.emit(EVENTS_DISPATCH.MOUSE_MOVE, {
@@ -67,12 +69,9 @@ export const addListeners = (socket: SocketIOClient.Socket) => {
         document.addEventListener('keydown', _listeners.keyDownListener);
         document.addEventListener('keyup', _listeners.keyUpListener);
 
-        socket.on(
-            EVENTS_DISPATCH.VNC_FRAME_RECEIVED,
-            (payload: IVncFrameMetadata) => {
-                console.info(payload);
-            }
-        );
+        socket.on(EVENTS_DISPATCH.VNC_FRAME, (payload: IVncFrameMetadata) => {
+            draw(context, payload);
+        });
 
         socket.emit(EVENTS_DISPATCH.CLIENT_READY);
     });
@@ -84,6 +83,7 @@ export const addListeners = (socket: SocketIOClient.Socket) => {
     socket.on(EVENTS_MESSAGES.VNC_CLIENT_ERROR, (payload: any) => {
         alert(payload.error);
         removeAllListeners();
+        destroy();
         socket.emit(EVENTS_ACTIONS.VNC_DISCONNECT);
     });
 };

@@ -30,5 +30,11 @@ export interface IVncFrameMetadata {
     y: number;
     width: number;
     height: number;
-    rect: any;
+    b64img: string;
+}
+
+export interface IClientInfo {
+    title: string;
+    width: number;
+    height: number;
 }

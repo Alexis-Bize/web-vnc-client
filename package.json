@@ -19,6 +19,7 @@
     "dependencies": {
         "app-root-path": "^2.1.0",
         "express": "^4.16.4",
+        "jimp": "^0.6.0",
         "pngjs": "^3.3.3",
         "rfb2": "^0.2.0",
         "socket.io": "^2.2.0",
@@ -27,6 +28,7 @@
     "devDependencies": {
         "@types/app-root-path": "^1.2.4",
         "@types/express": "^4.16.0",
+        "@types/jimp": "^0.2.28",
         "@types/node": "^10.12.18",
         "@types/pngjs": "^3.3.2",
         "@types/socket.io": "^2.1.2",
